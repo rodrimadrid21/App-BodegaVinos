@@ -26,28 +26,28 @@ namespace BodegaVinos.Services
                 Stock = wineDto.Stock
             };
 
-            _wineRepository.AddWine(wine); // Llamar al método del repositorio
+            _wineRepository.AddWine(wine); //llama al método del repositorio
             return wine;
         }
 
         public Wine GetWineByName(string name)
         {
-            return _wineRepository.GetWineByName(name); // Usar el repositorio
+            return _wineRepository.GetWineByName(name);
         }
 
-        public Wine UpdateStock(string name, int newStock) // Cambia el parámetro a string para buscar por nombre
+        public Wine UpdateStock(string name, int newStock)
         {
             var wine = _wineRepository.GetWineByName(name);
             if (wine == null)
                 return null;
 
-            wine.Stock = newStock; // Actualizar stock directamente en el objeto
-            return wine; // No se necesita guardar en el repositorio porque no hay base de datos
+            wine.Stock = newStock;
+            return wine;
         }
 
         public List<Wine> GetAllWines()
         {
-            return _wineRepository.GetAllWines(); // Usar el repositorio
+            return _wineRepository.GetAllWines();
         }
     }
 }

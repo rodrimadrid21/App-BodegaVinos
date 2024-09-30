@@ -15,7 +15,6 @@ namespace BodegaVinos.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Aquí puedes agregar configuraciones adicionales si es necesario
             base.OnModelCreating(modelBuilder);
         }
     }

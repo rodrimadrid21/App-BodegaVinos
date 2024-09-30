@@ -19,7 +19,7 @@ namespace BodegaVinos.Controllers
         [HttpPost]
         public IActionResult RegisterUser([FromBody] User user)
         {
-            // Validación de campos obligatorios
+            //validación de campos obligatorios
             if (string.IsNullOrEmpty(user.Username))
             {
                 return BadRequest("El nombre de usuario es obligatorio.");

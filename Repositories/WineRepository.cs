@@ -4,7 +4,8 @@ namespace BodegaVinos.Repositories
 {
     public class WineRepository
     {
-        private List<Wine> _wines = new List<Wine>();  // Lista en memoria de vinos
+        private List<Wine> _wines = new List<Wine>();  //lista de vinos
+        private int _currentId = 1; //ID en 1
 
         public List<Wine> GetAllWines()
         {
@@ -18,6 +19,8 @@ namespace BodegaVinos.Repositories
 
         public void AddWine(Wine wine)
         {
+            wine.Id = _currentId;
+            _currentId++;          
             _wines.Add(wine);
         }
 

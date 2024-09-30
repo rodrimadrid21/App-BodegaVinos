@@ -14,18 +14,17 @@ namespace BodegaVinos.Controllers
 
         public WineController(WineService wineService) => _wineService = wineService;
 
-        // Endpoint para registrar nuevos vinos
-        [HttpPost]
+        [HttpPost("register")]
         public IActionResult RegisterWine([FromBody] WineForCreationDTO wineDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var wine = _wineService.AddWine(wineDto);
-            return CreatedAtAction(nameof(GetWine), new { name = wine.Name }, wine); // Cambié id por name
+            return CreatedAtAction(nameof(GetWine), new { name = wine.Name }, wine);
         }
 
-        // Endpoint para consultar un vino por nombre
+        //conseguir uno
         [HttpGet("{name}")]
         public IActionResult GetWine(string name)
         {
@@ -35,9 +34,9 @@ namespace BodegaVinos.Controllers
             return Ok(wine);
         }
 
-        // Endpoint para actualizar el stock
-        [HttpPut("{name}/stock")] // Cambié id por name
-        public IActionResult UpdateStock(string name, [FromBody] int newStock) // Cambié el parámetro a string
+        //editar stock
+        [HttpPut("{name}/stock")]
+        public IActionResult UpdateStock(string name, [FromBody] int newStock)
         {
             var wine = _wineService.UpdateStock(name, newStock);
             if (wine == null)
@@ -46,11 +45,11 @@ namespace BodegaVinos.Controllers
             return Ok(wine);
         }
 
-        // Endpoint para consultar todos los vinos en inventario
-        [HttpGet]
+        //todos los vinos
+        [HttpGet ("all")]
         public IActionResult GetAllWines()
         {
-            var wines = _wineService.GetAllWines(); // Asegúrate de que hay paréntesis aquí
+            var wines = _wineService.GetAllWines();
             return Ok(wines);
         }
     }

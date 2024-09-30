@@ -13,12 +13,12 @@ namespace BodegaVinos.Services
             _context = context;
         }
 
-        public User AddUser(UserForCreationDTO userDto)
+        public User AddUser(UserForCreationDTO userDTO)
         {
             var user = new User
             {
-                Username = userDto.Username,
-                Password = userDto.Password // Asegúrate de hashear la contraseña en una implementación real
+                Username = userDTO.Username,
+                Password = userDTO.Password
             };
 
             _context.Users.Add(user);
