@@ -16,7 +16,7 @@ namespace BodegaVinos.Controllers
         }
 
         //crear una nueva cata
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateCata([FromBody] Cata cata)
         {
             if (cata == null || cata.Vinos.Count == 0)
@@ -29,7 +29,7 @@ namespace BodegaVinos.Controllers
         }
 
         //todas las catas
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllCatas()
         {
             var catas = await _cataService.GetAllCatasAsync();
