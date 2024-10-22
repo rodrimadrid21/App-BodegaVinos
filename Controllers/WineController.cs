@@ -12,46 +12,67 @@ namespace BodegaVinos.Controllers
     {
         private readonly WineService _wineService;
 
-        public WineController(WineService wineService) => _wineService = wineService;
+        public WineController(WineService wineService)
+        {
+            _wineService = wineService; // Asigna el servicio de vinos
+        }
 
+        //Registrar uno
         [HttpPost("register")]
-        public IActionResult RegisterWine([FromBody] WineForCreationDTO wineDto)
+        public async Task<IActionResult> RegisterWine([FromBody] WineForCreationDTO wineDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var wine = _wineService.AddWine(wineDto);
-            return CreatedAtAction(nameof(GetWine), new { name = wine.Name }, wine);
+            var wine = await _wineService.AddWineAsync(wineDto);
+            return CreatedAtAction(nameof(GetWineById), new { id = wine.Id }, wine);
         }
 
-        //conseguir uno
-        [HttpGet("{name}")]
-        public IActionResult GetWine(string name)
+        //Todos los vinos
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllWines()
         {
-            var wine = _wineService.GetWineByName(name);
-            if (wine == null) return NotFound();
+            var wines = await _wineService.GetAllWinesAsync();
+            return Ok(wines);
+        }
 
+        //conseguir por variedad
+        [HttpGet("variety/{variety}")]
+        public async Task<IActionResult> GetWinesByVariety(string variety)
+        {
+            var wines = await _wineService.GetWinesByVarietyAsync(variety);
+            if (wines == null || wines.Count == 0)
+            {
+                return NotFound($"No se encontraron vinos de la variedad {variety}");
+            }
+            return Ok(wines);
+        }
+        //conseguir uno por ID
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetWineById(int id)
+        {
+            var wine = await _wineService.GetWineByIdAsync(id);
+            if (wine == null)
+            {
+                return NotFound($"No se encontró vino con Id {id}");
+            }
             return Ok(wine);
         }
 
         //editar stock
-        [HttpPut("{name}/stock")]
-        public IActionResult UpdateStock(string name, [FromBody] int newStock)
+        [HttpPut("{id}/stock")]
+        public async Task<IActionResult> UpdateWineStock(int id, [FromBody] int newStock)
         {
-            var wine = _wineService.UpdateStock(name, newStock);
+            // Verifica que el vino exista
+            var wine = await _wineService.GetWineByIdAsync(id);
             if (wine == null)
-                return NotFound();
+            {
+                return NotFound($"No se encontró vino con Id {id}");
+            }
 
-            return Ok(wine);
-        }
-
-        //todos los vinos
-        [HttpGet ("all")]
-        public IActionResult GetAllWines()
-        {
-            var wines = _wineService.GetAllWines();
-            return Ok(wines);
+            // Actualiza el stock
+            await _wineService.UpdateWineStockAsync(id, newStock);
+            return Ok($"Stock del vino con Id {id} actualizado a {newStock}.");
         }
     }
 }
-

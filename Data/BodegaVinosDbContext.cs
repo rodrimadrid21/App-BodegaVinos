@@ -11,6 +11,7 @@ namespace BodegaVinos.Data
         }
 
         public DbSet<Wine> Wines { get; set; }
+        public DbSet<Cata> Catas { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

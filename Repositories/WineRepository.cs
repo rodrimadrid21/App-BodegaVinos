@@ -1,35 +1,53 @@
-﻿using BodegaVinos.Entities;
+﻿using BodegaVinos.Data;
+using BodegaVinos.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BodegaVinos.Repositories
 {
     public class WineRepository
     {
-        private List<Wine> _wines = new List<Wine>();  //lista de vinos
-        private int _currentId = 1; //ID en 1
+        private readonly BodegaVinosDbContext _context;
 
-        public List<Wine> GetAllWines()
+        public WineRepository(BodegaVinosDbContext context)
         {
-            return _wines;
+            _context = context; //asigna el contexto
         }
 
-        public Wine GetWineByName(string name)
+        //lista de todos los vinos
+        public async Task<List<Wine>> GetAllWinesAsync()
         {
-            return _wines.FirstOrDefault(w => w.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase));
+            return await _context.Wines.ToListAsync();
         }
 
-        public void AddWine(Wine wine)
+        //agregar un vino
+        public async Task AddWineAsync(Wine wine)
         {
-            wine.Id = _currentId;
-            _currentId++;          
-            _wines.Add(wine);
+            await _context.Wines.AddAsync(wine);
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateWineStock(string name, int newStock)
+        //conseguir vinos por variedad
+        public async Task<List<Wine>> GetWinesByVarietyAsync(string variety)
         {
-            var wine = _wines.FirstOrDefault(w => w.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase));
+            return await _context.Wines
+                .Where(w => w.Variety == variety)
+                .ToListAsync(); //Devuelve la lista de vinos que coinciden con la variedad
+        }
+
+        //conseguir un vino por id
+        public async Task<Wine> GetWineByIdAsync(int id)
+        {
+            return await _context.Wines.FindAsync(id);
+        }
+
+        //actualizar el stock
+        public async Task UpdateWineStockAsync(int id, int newStock)
+        {
+            var wine = await _context.Wines.FirstOrDefaultAsync(w => w.Id == id);
             if (wine != null)
             {
-                wine.Stock = newStock;
+                wine.Stock = newStock; // Actualiza el stock
+                await _context.SaveChangesAsync(); // Guarda los cambios en la BDD
             }
         }
     }

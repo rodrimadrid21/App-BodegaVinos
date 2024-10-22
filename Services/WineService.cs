@@ -1,8 +1,6 @@
 ﻿using BodegaVinos.Entities;
 using BodegaVinos.Models;
 using BodegaVinos.Repositories;
-using Microsoft.EntityFrameworkCore;
-using BodegaVinos.Data;
 
 namespace BodegaVinos.Services
 {
@@ -15,7 +13,7 @@ namespace BodegaVinos.Services
             _wineRepository = wineRepository;
         }
 
-        public Wine AddWine(WineForCreationDTO wineDto)
+        public async Task<Wine> AddWineAsync(WineForCreationDTO wineDto)
         {
             var wine = new Wine
             {
@@ -26,28 +24,31 @@ namespace BodegaVinos.Services
                 Stock = wineDto.Stock
             };
 
-            _wineRepository.AddWine(wine); //llama al método del repositorio
+            await _wineRepository.AddWineAsync(wine);
             return wine;
         }
-
-        public Wine GetWineByName(string name)
+        //conseguir todos
+        public async Task<List<Wine>> GetAllWinesAsync()
         {
-            return _wineRepository.GetWineByName(name);
+            return await _wineRepository.GetAllWinesAsync();
         }
 
-        public Wine UpdateStock(string name, int newStock)
+        //conseguir vinos por variedad
+        public async Task<List<Wine>> GetWinesByVarietyAsync(string variety)
         {
-            var wine = _wineRepository.GetWineByName(name);
-            if (wine == null)
-                return null;
-
-            wine.Stock = newStock;
-            return wine;
+            return await _wineRepository.GetWinesByVarietyAsync(variety);
+        }
+        //conseguir por id
+        public async Task<Wine> GetWineByIdAsync(int id)
+        {
+            return await _wineRepository.GetWineByIdAsync(id);
         }
 
-        public List<Wine> GetAllWines()
+        // actualizar stock
+        public async Task UpdateWineStockAsync(int id, int newStock)
         {
-            return _wineRepository.GetAllWines();
+            await _wineRepository.UpdateWineStockAsync(id, newStock);
         }
+
     }
 }

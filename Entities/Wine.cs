@@ -10,7 +10,7 @@ namespace BodegaVinos.Entities
         public int Year { get; set; }
         public string Region { get; set; } = string.Empty;
 
-        // Cantidad disponible en stock, debe ser mayor o igual a 0
+        //cantidad disponible en stock, debe ser mayor o igual a 0
         private int _stock;
         public int Stock
         {
